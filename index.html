@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Agenda Backbone</title>
+</head>
+<body>
+	<h1>Agenda de Contactos con backbone</h1>
+
+	<form id="nueva-persona">
+		<table>
+			<tr>
+				<td><label>Nombre: </label></td>
+				<td><input id="nombre-contacto" name="nombre-contacto" type="text"></td>
+			</tr>
+			<tr>
+				<td><label>Dirección: </label></td>
+				<td><input id="dire-contacto" name="dire-contacto" type="text"></td>
+			</tr>
+			<tr>
+				<td><label>Edad: </label></td>
+				<td><input id="edad-contacto" name="edad-contacto" type="text"></td>
+			</tr>
+			<tr>
+				<td><button>Guardar</button></td>
+			</tr>
+		</table>
+		<hr>
+		<div id="persona-container"></div>
+	</form>
+
+	<!-- Backbone.js require these to work: -->
+	<script src="underscore.js"></script>
+	<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>-->
+	<script src="jquery-1.11.1.min.js"></script>
+	<script src="backbone.js"></script>
+	<script type="text/javascript">
+		(function($) {
+			var Persona = Backbone.Model.extend({
+				defaults: function() {
+					return {
+						nombre: '',
+						direccion: '',
+						edad: ''
+					}
+				}
+			});
+
+			var ListaPersonas = Backbone.Collection.extend({
+				model: Persona
+			});
+
+			var personas = new ListaPersonas();
+
+			var PersonaView = Backbone.View.extend({
+				model: new Persona(),
+				tagName: 'div',
+				initialize: function() {
+					this.template = _.template($('#persona-template').html());
+				},
+				render: function() {
+					this.$el.html(this.template(this.model.toJSON()))
+					return this;
+				}
+			});
+
+			var PersonasView = Backbone.View.extend({
+				model: personas,
+				el: $('#persona-container'),
+				initialize: function() {
+					this.model.on('add', this.render, this);
+				},
+				render: function() {
+					var self = this;
+					self.$el.html('');
+					_.each(this.model.toArray(), function(persona, i) {
+						self.$el.append((new PersonaView({model: persona})).render().$el);
+					});
+					return this;
+				}
+			});
+
+			$(function() {
+				$('#nueva-persona').submit(function(ev) {
+					var persona = new Persona({ nombre: $('#nombre-contacto').val(), direccion: $('#dire-contacto').val(), edad: $('#edad-contacto').val()});
+					personas.add(persona);
+					
+					console.log(personas.toJSON());
+
+					return false;
+				});
+
+				var appView = new PersonasView();
+			});
+		})(jQuery);
+	</script>
+
+	<!-- Templates -->
+	<script type="text/templates" id="persona-template">
+		<span class="nombre"><%= nombre %>:</span>
+		<span class="direccion"><%= direccion %>-</span>
+		<span class="edad"><%= edad %></span>
+	</script>
+</body>
+</html>
