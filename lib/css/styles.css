@@ -1,0 +1,33 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+body {
+	background: #eee;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.formulario {
+	width: 20%;
+	height: 100px;
+	margin: 0 auto;
+	padding: 30px;
+	/*padding-bottom: 20px;*/
+	border: 1px solid #ccc;
+	-moz-border-radius: 1px;
+	border-radius: 4px;
+	background: #fff;
+	box-shadow: 1px 1px 1px 1px #ccc;
+}
+
+button {
+	width: 100px;
+	height: 30px;
+	background: #fff;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	margin-top: 4px;
+	padding: 5px;
+}
+
+button:active {
+	padding-top: 6px;
+}
